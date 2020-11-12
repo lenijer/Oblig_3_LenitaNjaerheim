@@ -6,6 +6,17 @@
 #include "Login.h"
 #include "BattleShip.h"
 
+/*
+ *  .  . *       *    .        .        .   *    ..
+ .    *        .   ###     .      .        .            *
+	*.   *        #####   .     *      *        *    .
+  ____       *  ######### *    .  *      .        .  *   .
+ /   /\  .     ###\#|#/###   ..    *    .      *  .  ..  *
+/___/  ^8/      ###\|/###  *    *            .      *   *
+|   ||%%(        # }|{  #
+|___|,  \\  ejm    }|{
+*/
+
 void makeEmptyBoard(char Board[M][N]) {
 	for (int i = 0; i < M; i++) {
 		for (int j = 0; j < N; j++) {

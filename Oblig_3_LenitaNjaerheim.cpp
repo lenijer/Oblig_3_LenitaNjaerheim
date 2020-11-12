@@ -6,6 +6,17 @@
 #include "Login.h"
 #include "BattleShip.h"
 
+/*
+	 *  .  . *       *    .        .        .   *    ..
+ .    *        .   ###     .      .        .            *
+    *.   *        #####   .     *      *        *    .
+  ____       *  ######### *    .  *      .        .  *   .
+ /   /\  .     ###\#|#/###   ..    *    .      *  .  ..  *
+/___/  ^8/      ###\|/###  *    *            .      *   *
+|   ||%%(        # }|{  #
+|___|,  \\  ejm    }|{
+*/
+
 void makeEmptyBoard(char Board[M][N]) {
 	for (int i = 0; i < M; i++) {
 		for (int j = 0; j < N; j++) {
@@ -14,20 +25,111 @@ void makeEmptyBoard(char Board[M][N]) {
 	}
 }
 
+void Tryplacing(char(&Board)[M][N], int& x, int& y) {
+	int temp = 0;
+	for (int i = 0; i < M; i++) {
+		temp = M - i - 1;
+		for (int j = 0; j < N; j++) {
+			if (Board[temp][j] == HIT) {
+				if (i == 5 && j == 5) {
+					if (Board[temp + 1][j] == ' ') {
+						x = i - 1;
+						y = j;
+						return;
+					}
+					if (Board[temp][j - 1] == ' ') {
+						x = i;
+						y = j - 1;
+						return;
+					}
+				}
+				else if (i == 5 && j < 5)
+				{
+					if (Board[temp + 1][j] == ' ') {
+						x = i - 1;
+						y = j;
+						return;
+					}
+					if (Board[temp][j + 1] == ' ') {
+						x = i;
+						y = j + 1;
+						return;
+					}
+				}
+				else if (i < 5 && j == 5)
+				{
+					if (Board[temp - 1][j] == ' ') {
+						x = i + 1;
+						y = j;
+						return;
+					}
+					else if (Board[temp][j - 1] == ' ') {
+						x = i;
+						y = j - 1;
+						return;
+					}
+				}
+				else if (i < 5 && j < 5 && i > 0 && j > 0) {
+					if (Board[temp - 1][j] == ' ') {
+						x = i + 1;
+						y = j;
+						return;
+					}
+					else if (Board[temp][j + 1] == ' ') {
+						x = i;
+						y = j + 1;
+						return;
+					}
+					else if (Board[temp + 1][j] == ' ') {
+						x = i - 1;
+						y = j;
+						return;
+					}
+					else if (Board[temp][j - 1] == ' ' ) {
+						x = i;
+						y = j - 1;
+						return;
+					}
+				}
+				else if (temp == 0 && j == 0) {
+					if (Board[temp - 1][j] == ' ') {
+						x = i + 1;
+						y = j;
+						return;
+					}
+					else if (Board[temp][j + 1] == ' ') {
+						x = i;
+						y = j + 1;
+						return;
+					}
+				}
+			}
+		}
+	}
+}
+
 void AI(char (&PlayerBoard)[M][N], int &Phit, char (&AIBord)[M][N], int &row, int &column, char (&AIDisplay)[M][N], char (&Board)[M][N], int &AIhit) {
+
 	std::cout << "AI's bord:\n";
 	printPlayerBoard(AIDisplay, AIBord, row, column, Phit);
+
 	int x = 0;
 	int y = 0;
+
+	bool intelligentselction = true;
 
 	do
 	{
 		x = randomRow();
 		y = randomColumn();
 
-	} while (PlayerBoard[x][y] == HIT || PlayerBoard[x][y] == MISS);
+		Tryplacing(PlayerBoard, x, y);
 
-	std::cout << "\n";
+		if (!(PlayerBoard[M - x - 1][y] == HIT || PlayerBoard[M - x - 1][y] == MISS)) {
+			intelligentselction = false;
+		}
+
+	} while (intelligentselction);
 
 	std::cout << "Your board:\n";
 	printPlayerBoard(PlayerBoard, Board, x, y, AIhit);
@@ -35,7 +137,7 @@ void AI(char (&PlayerBoard)[M][N], int &Phit, char (&AIBord)[M][N], int &row, in
 
 void play() {
 
-	int numberOfShots = 13;
+	int numberOfShots = 18;
 	bool playing = true;
 	int numberOfHits;
 	int AIhits;
@@ -88,12 +190,15 @@ void Shoot(char (&Board)[M][N], int &numberOfShots, bool &shooting, int &hits, i
 
 		if (numberOfShots == 0) {
 			shooting = false;
+			std::cout << "\nGame ended. No more shots left\n\n";
 		}
 		else if (hits == sinkables) {
 			shooting = false;
+			std::cout << "\nGame ended you won\n\n";
 		}
 		else if (AIHIT == sinkables) {
 			shooting = false;
+			std::cout << "\nGame ended AI won\n\n";
 		}
 	}
 
